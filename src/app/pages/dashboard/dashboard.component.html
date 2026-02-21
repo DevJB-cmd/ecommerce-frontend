@@ -1,0 +1,40 @@
+<div class="dashboard">
+  <div class="dash-head">
+    <h2>Tableau de bord</h2>
+    <p class="muted">Vue d'ensemble rapide des performances</p>
+  </div>
+
+  <div *ngIf="loading">Chargement...</div>
+
+  <div class="stats">
+    <div class="stat card">
+      <div class="stat-value">{{totalProducts}}</div>
+      <div class="stat-label">Produits</div>
+    </div>
+    <div class="stat card">
+      <div class="stat-value">{{totalOrders}}</div>
+      <div class="stat-label">Commandes</div>
+    </div>
+    <div class="stat card">
+      <div class="stat-value">{{totalUsers}}</div>
+      <div class="stat-label">Utilisateurs</div>
+    </div>
+  </div>
+
+  <section class="recent card">
+    <h3>Commandes récentes</h3>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>ID</th><th>Date</th><th>Total</th><th>Statut</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let o of recentOrders">
+            <td>{{o.id}}</td>
+            <td>{{o.date}}</td>
+            <td>{{o.total}}</td>
+            <td>{{o.status}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

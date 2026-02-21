@@ -1,0 +1,55 @@
+<div class="list">
+  <div class="list-header">
+    <h2>Produits</h2>
+  </div>
+
+  <div *ngIf="loading" class="loading">Chargement...</div>
+  <div *ngIf="message" class="success">{{message}}</div>
+  <div *ngIf="error" class="error">{{error}}</div>
+
+  <!-- Card grid for small screens -->
+  <div class="product-grid" *ngIf="!loading">
+    <article class="card" *ngFor="let p of products">
+      <img class="thumb" [src]="p.imageUrl || '/assets/placeholder.png'" alt="{{p.name}}" />
+      <div class="card-body">
+        <h3 class="card-title">{{p.name}}</h3>
+        <p class="muted">{{p.description}}</p>
+        <div class="meta">
+          <span class="price">{{p.price | number:'1.2-2'}} €</span>
+          <span class="stock">Stock: {{p.stock}}</span>
+        </div>
+        <div class="actions">
+          <button class="btn btn-sm" (click)="onEdit(p.id)">Modifier</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteOne(p.id)">Supprimer</button>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Table for larger screens -->
+  <table class="product-table" *ngIf="!loading">
+    <thead>
+      <tr><th>ID</th><th>Produit</th><th>Prix</th><th>Stock</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products">
+        <td class="id">{{p.id}}</td>
+        <td class="product">
+          <div class="product-inline">
+            <img class="thumb-sm" [src]="p.imageUrl || '/assets/placeholder.png'" alt="{{p.name}}" />
+            <div>
+              <div class="name">{{p.name}}</div>
+              <div class="muted small">{{p.description}}</div>
+            </div>
+          </div>
+        </td>
+        <td class="price">{{p.price | number:'1.2-2'}} €</td>
+        <td class="stock">{{p.stock}}</td>
+        <td class="actions">
+          <button class="btn" (click)="onEdit(p.id)">Modifier</button>
+          <button class="btn btn-danger" (click)="deleteOne(p.id)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

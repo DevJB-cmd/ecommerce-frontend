@@ -1,0 +1,12 @@
+<div>
+  <h3>Modifier client</h3>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>Nom<input formControlName="name" /></label>
+    <label>Email<input formControlName="email" /></label>
+    <label>Téléphone<input formControlName="phone" /></label>
+    <label>Adresse<input formControlName="address" /></label>
+    <button type="submit">Enregistrer</button>
+  </form>
+  <div *ngIf="message" class="success">{{message}}</div>
+  <div *ngIf="error" class="error">{{error}}</div>
+</div>

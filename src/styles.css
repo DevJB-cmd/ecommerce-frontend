@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global utilities and responsive helpers */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;color:#0f172a;background:#ffffff}
+a{color:inherit}
+.container{max-width:1100px;margin:0 auto;padding:0 1rem}
+
+/* Responsive grid helper */
+.grid{display:grid;gap:1rem}
+@media(min-width:1100px){.grid.cols-4{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.grid.cols-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.grid.cols-4{grid-template-columns:1fr}}
+
+/* Buttons reset */
+.btn{cursor:pointer;border:0}
+

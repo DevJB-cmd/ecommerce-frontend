@@ -1,0 +1,16 @@
+<div class="list">
+  <h3>Providers</h3>
+  <div *ngIf="error" class="error">{{error}}</div>
+  <table *ngIf="items?.length">
+    <tr><th>ID</th><th>Name</th><th>Actions</th></tr>
+    <tr *ngFor="let p of items">
+      <td>{{p.id}}</td>
+      <td>{{p.name}}</td>
+      <td>
+        <a [routerLink]="['/provider/edit', p.id]">Edit</a>
+        <button (click)="deleteOne(p.id)">Delete</button>
+      </td>
+    </tr>
+  </table>
+  <div *ngIf="!items?.length">No providers</div>
+</div>

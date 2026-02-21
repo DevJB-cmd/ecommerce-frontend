@@ -1,0 +1,11 @@
+<div>
+  <h3>Modifier commande</h3>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>Date<input formControlName="date" type="date" /></label>
+    <label>Total<input formControlName="total" type="number" /></label>
+    <label>Statut<input formControlName="status" /></label>
+    <button type="submit">Mettre à jour</button>
+  </form>
+  <div *ngIf="message" class="success">{{message}}</div>
+  <div *ngIf="error" class="error">{{error}}</div>
+</div>

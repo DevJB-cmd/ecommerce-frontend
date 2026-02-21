@@ -1,0 +1,10 @@
+<div>
+  <h3>Nouvelle catégorie</h3>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>Nom<input formControlName="name" /></label>
+    <label>Description<textarea formControlName="description"></textarea></label>
+    <button type="submit">Créer</button>
+  </form>
+  <div *ngIf="message" class="success">{{message}}</div>
+  <div *ngIf="error" class="error">{{error}}</div>
+</div>

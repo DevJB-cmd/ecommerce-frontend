@@ -1,0 +1,12 @@
+<div>
+  <h3>Catégories</h3>
+  <div *ngIf="loading">Chargement...</div>
+  <div *ngIf="error" class="error">{{error}}</div>
+  <table *ngIf="!loading">
+    <tr><th>Id</th><th>Nom</th><th>Actions</th></tr>
+    <tr *ngFor="let c of items">
+      <td>{{c.id}}</td><td>{{c.name}}</td>
+      <td><button>Modifier</button> <button (click)="deleteOne(c.id)">Supprimer</button></td>
+    </tr>
+  </table>
+</div>

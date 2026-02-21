@@ -1,0 +1,6 @@
+.success{color:green}
+.error{color:red}
+form{display:flex;flex-direction:column;gap:8px}
+label input{padding:4px}
+.edit{padding:12px}
+label{display:block;margin-bottom:8px}

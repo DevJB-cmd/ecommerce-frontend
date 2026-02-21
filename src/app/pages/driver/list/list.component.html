@@ -1,0 +1,7 @@
+<div>
+  <h3>Chauffeurs</h3>
+  <ul>
+    <li *ngFor="let d of items">{{d.name}} — {{d.phone}} — {{d.licenseNumber}} <button (click)="deleteOne(d.id)">Supprimer</button></li>
+  </ul>
+  <div *ngIf="error" class="error">{{error}}</div>
+</div>

@@ -1,0 +1,9 @@
+<div class="edit">
+  <h3>Edit Provider</h3>
+  <div *ngIf="error" class="error">{{error}}</div>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <input formControlName="id" type="hidden"/>
+    <label>Name <input formControlName="name"/></label>
+    <button type="submit">Update</button>
+  </form>
+</div>

@@ -1,0 +1,20 @@
+<div>
+  <h3>Modifier Galerie</h3>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>Url<input formControlName="url" /></label>
+    <label>Description<input formControlName="description" /></label>
+    <button type="submit">Enregistrer</button>
+  </form>
+  <div *ngIf="message" class="success">{{message}}</div>
+  <div *ngIf="error" class="error">{{error}}</div>
+</div>
+<div>
+  <h3>Modifier image galerie</h3>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>Image URL<input formControlName="imageUrl" /></label>
+    <label>Produit Id<input formControlName="productId" type="number" /></label>
+    <button type="submit">Enregistrer</button>
+  </form>
+  <div *ngIf="message" class="success">{{message}}</div>
+  <div *ngIf="error" class="error">{{error}}</div>
+</div>

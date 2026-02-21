@@ -1,0 +1,10 @@
+<div>
+  <h3>Sous-catégories</h3>
+  <table>
+    <tr><th>Id</th><th>Nom</th><th>CategoryId</th><th>Actions</th></tr>
+    <tr *ngFor="let s of items">
+      <td>{{s.id}}</td><td>{{s.name}}</td><td>{{s.categoryId}}</td>
+      <td><button (click)="deleteOne(s.id)">Supprimer</button></td>
+    </tr>
+  </table>
+</div>

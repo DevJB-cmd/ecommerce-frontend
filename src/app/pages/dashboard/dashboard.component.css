@@ -1,0 +1,17 @@
+.dashboard{padding:16px;display:block}
+.dash-head{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.muted{color:#6b7280}
+.stats{display:flex;gap:12px;margin-bottom:16px}
+.card{background:#fff;padding:12px;border-radius:8px;border:1px solid #eef2f7}
+.stat{flex:1;text-align:center}
+.stat-value{font-size:1.6rem;font-weight:700}
+.stat-label{color:#6b7280}
+.recent{overflow:auto}
+.table-wrap{width:100%;overflow:auto}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:8px 10px;border-bottom:1px solid #f1f5f9;text-align:left}
+
+@media(max-width:800px){
+	.stats{flex-direction:column}
+	.grid-3{grid-template-columns:1fr}
+}

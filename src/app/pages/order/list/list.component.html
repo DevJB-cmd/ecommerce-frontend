@@ -1,0 +1,14 @@
+<div>
+  <h3>Commandes récentes</h3>
+  <div *ngIf="loading">Chargement...</div>
+  <table *ngIf="!loading">
+    <tr><th>Id</th><th>Date</th><th>Total</th><th>Statut</th><th>Actions</th></tr>
+    <tr *ngFor="let o of items">
+      <td>{{o.id}}</td>
+      <td>{{o.date}}</td>
+      <td>{{o.total | number:'1.2-2'}}</td>
+      <td>{{o.status}}</td>
+      <td><button>Voir</button> <button (click)="deleteOne(o.id)">Supprimer</button></td>
+    </tr>
+  </table>
+</div>

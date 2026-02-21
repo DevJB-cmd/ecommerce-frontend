@@ -1,0 +1,7 @@
+<div>
+  <h3>Galerie</h3>
+  <ul>
+    <li *ngFor="let g of items"><img [src]="g.imageUrl" alt="img" width="60"/> Produit: {{g.productId}} <button (click)="deleteOne(g.id)">Supprimer</button></li>
+  </ul>
+  <div *ngIf="error" class="error">{{error}}</div>
+</div>
