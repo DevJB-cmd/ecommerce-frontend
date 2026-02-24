@@ -1,0 +1,31 @@
+:root{
+  --bs-body-bg: #f8fafc;
+  --bs-body-color: #0f172a;
+  --accent: #0ea5a4;
+  --accent-dark: #059e97;
+}
+
+/* Header */
+.site-header{background:linear-gradient(90deg,#ffffff,#f8fafc);box-shadow:0 2px 8px rgba(15,23,42,0.04);}
+.brand{color:var(--accent);font-size:1.4rem}
+.nav a{color:rgba(15,23,42,0.85);}
+
+/* Buttons */
+.btn-primary{background:var(--accent);border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
+
+/* Forms */
+input[type=text], input[type=email], input[type=number], textarea, select{
+  border-radius:0.5rem;border:1px solid #e6edf2;padding:0.5rem 0.75rem;box-shadow:none;
+}
+
+/* Cards */
+.product-card{border-radius:12px;border:1px solid rgba(15,23,42,0.04);box-shadow:0 6px 18px rgba(15,23,42,0.04)}
+
+/* Footer */
+.site-footer{background:transparent;color:rgba(15,23,42,0.7)}
+
+@media(max-width:700px){
+  .search{display:none}
+  .nav{display:none}
+}

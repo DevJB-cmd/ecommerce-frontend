@@ -1,0 +1,58 @@
+{
+  "header": {
+    "home": "Accueil",
+    "products": "Produits",
+    "categories": "Catégories",
+    "providers": "Fournisseurs",
+    "cart": "Panier",
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "logout": "Se déconnecter",
+    "dashboard": "Tableau de bord",
+    "admin": "Admin"
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "submit": "Se connecter",
+    "signup": "S'inscrire",
+    "already": "Déjà un compte ?"
+  },
+  "actions": {
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "update": "Enregistrer",
+    "create": "Créer",
+    "confirm": "Confirmer ?",
+    "noItems": "Aucun élément"
+  },
+  "product": {
+    "title": "Produits",
+    "noProducts": "Aucun produit",
+    "addToCart": "Ajouter au panier",
+    "newProduct": "Nouveau produit"
+  },
+  "category": {
+    "title": "Catégories",
+    "noCategories": "Aucune catégorie",
+    "newCategory": "Nouvelle catégorie"
+  },
+  "provider": {
+    "title": "Fournisseurs",
+    "noProviders": "Aucun fournisseur",
+    "newProvider": "Nouveau fournisseur"
+  },
+  "user": {
+    "title": "Utilisateurs",
+    "noUsers": "Aucun utilisateur"
+  },
+  "messages": {
+    "error": "Erreur",
+    "success": "Succès"
+  }
+}

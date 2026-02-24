@@ -6,11 +6,14 @@ import { entityUrl } from './base.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private base = entityUrl('product');
+  private base = entityUrl('products');
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.base}/findAll`);
+  }
+  search(query: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.base}/search?q=${encodeURIComponent(query)}`);
   }
   getById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.base}/findById/${id}`);

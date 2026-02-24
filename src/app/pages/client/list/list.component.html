@@ -1,11 +1,26 @@
 <div>
-  <h3>Clients</h3>
-  <table>
-    <tr><th>Id</th><th>Nom</th><th>Email</th><th>Téléphone</th><th>Actions</th></tr>
-    <tr *ngFor="let c of items">
-      <td>{{c.id}}</td><td>{{c.name}}</td><td>{{c.email}}</td><td>{{c.phone}}</td>
-      <td><button>Modifier</button> <button (click)="deleteOne(c.id)">Supprimer</button></td>
-    </tr>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Clients</h3>
+    <a class="btn btn-sm btn-primary" routerLink="/clients/create">Ajouter un client</a>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr><th>Id</th><th>Nom</th><th>Email</th><th>Téléphone</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of items">
+        <td>{{c.id}}</td>
+        <td>{{c.name}}</td>
+        <td>{{c.email}}</td>
+        <td>{{c.phone}}</td>
+        <td>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/clients/edit', c.id]">Modifier</a>
+          <button class="btn btn-sm btn-danger" (click)="deleteOne(c.id)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
   </table>
-  <div *ngIf="error" class="error">{{error}}</div>
+
+  <div *ngIf="error" class="alert alert-danger">{{error}}</div>
 </div>

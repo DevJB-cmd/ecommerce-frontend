@@ -1,10 +1,19 @@
-<div>
-  <h3>Modifier catégorie</h3>
+<div class="card p-4">
+  <h3 class="mb-3">Modifier catégorie</h3>
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <label>Nom<input formControlName="name" /></label>
-    <label>Description<textarea formControlName="description"></textarea></label>
-    <button type="submit">Mettre à jour</button>
+    <div class="mb-3">
+      <label class="form-label">Nom</label>
+      <input class="form-control" formControlName="name" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" formControlName="description"></textarea>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit" [disabled]="loading">Mettre à jour</button>
+      <button class="btn btn-outline-secondary" type="button" (click)="form.reset()">Annuler</button>
+    </div>
   </form>
-  <div *ngIf="message" class="success">{{message}}</div>
-  <div *ngIf="error" class="error">{{error}}</div>
+  <div *ngIf="message" class="alert alert-success mt-3">{{message}}</div>
+  <div *ngIf="error" class="alert alert-danger mt-3">{{error}}</div>
 </div>

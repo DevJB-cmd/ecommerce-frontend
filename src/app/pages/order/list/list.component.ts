@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Order } from '../../models/order.model';
 import { OrderService } from '../../services/order.service';
 
-@Component({ selector: 'app-order-list', standalone: true, imports: [CommonModule], templateUrl: './list.component.html', styleUrls: ['./list.component.css'] })
+@Component({ selector: 'app-order-list', standalone: true, imports: [CommonModule, RouterModule], templateUrl: './list.component.html', styleUrls: ['./list.component.css'] })
 export class OrderListComponent implements OnInit {
   items: Order[] = []; loading=false; error=''; message='';
   constructor(private s: OrderService) {}

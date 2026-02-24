@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule,FormsModule],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
@@ -16,8 +18,9 @@ export class ProductListComponent implements OnInit {
   loading = false;
   message = '';
   error = '';
+  query = '';
 
-  constructor(private service: ProductService, private router: Router) {}
+  constructor(private service: ProductService, private router: Router, public auth: AuthService) {}
 
   ngOnInit(): void {
     this.load();
@@ -31,6 +34,23 @@ export class ProductListComponent implements OnInit {
     });
   }
 
+  search() {
+    const q = (this.query || '').trim().toLowerCase();
+    this.loading = true;
+    this.service.getAll().subscribe({
+      next: d => {
+        this.products = d.filter(
+          p =>
+            p.name?.toLowerCase().includes(q) ||
+            p.provider?.companyName?.toLowerCase().includes(q) ||
+            p.subCategory?.name?.toLowerCase().includes(q)
+        );
+        this.loading = false;
+      },
+      error: () => { this.error = 'Erreur recherche'; this.loading = false; }
+    });
+  }
+
   deleteOne(id: number): void {
     if (!confirm('Confirmer suppression ?')) { return; }
     this.service.delete(id).subscribe({
@@ -40,6 +60,6 @@ export class ProductListComponent implements OnInit {
   }
 
   onEdit(id: number): void {
-    this.router.navigate(['/product', 'edit', id]);
+    this.router.navigate(['/admin','products','edit', id]);
   }
 }

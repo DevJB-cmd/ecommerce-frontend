@@ -2,8 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Gallery } from '../../models/gallery.model';
 import { GalleryService } from '../../services/gallery.service';
+import { RouterLink } from "@angular/router";
 
-@Component({ selector: 'app-gallery-list', standalone: true, imports: [CommonModule], templateUrl: './list.component.html', styleUrls: ['./list.component.css'] })
+@Component({ selector: 'app-gallery-list', standalone: true,
+  imports: [CommonModule, RouterLink], 
+  templateUrl: './list.component.html', 
+  styleUrls: ['./list.component.css'] })
+  
 export class GalleryListComponent implements OnInit {
   items: Gallery[] = []; loading=false; error='';
   constructor(private s: GalleryService) {}

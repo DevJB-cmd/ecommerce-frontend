@@ -1,7 +1,23 @@
 <div>
-  <h3>Chauffeurs</h3>
-  <ul>
-    <li *ngFor="let d of items">{{d.name}} — {{d.phone}} — {{d.licenseNumber}} <button (click)="deleteOne(d.id)">Supprimer</button></li>
-  </ul>
-  <div *ngIf="error" class="error">{{error}}</div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Chauffeurs</h3>
+    <a class="btn btn-sm btn-primary" routerLink="/drivers/create">Ajouter</a>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+  <table class="table table-striped">
+    <thead>
+      <tr><th>Nom</th><th>Téléphone</th><th>Permis</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of items">
+        <td>{{d.name}}</td>
+        <td>{{d.phone}}</td>
+        <td>{{d.licenseNumber}}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/drivers','edit', d.id]">Modifier</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteOne(d.id)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

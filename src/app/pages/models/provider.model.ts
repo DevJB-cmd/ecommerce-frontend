@@ -1,7 +1,9 @@
 export interface Provider {
   id: number;
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
+  companyName?: string;
+  // Backward-compatible aliases
+  name?: string;
+  company?: string;
+  email?: string;
+  phone?: string;
 }

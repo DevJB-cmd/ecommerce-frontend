@@ -1,16 +1,23 @@
-<div class="list">
-  <h3>Providers</h3>
-  <div *ngIf="error" class="error">{{error}}</div>
-  <table *ngIf="items?.length">
-    <tr><th>ID</th><th>Name</th><th>Actions</th></tr>
-    <tr *ngFor="let p of items">
-      <td>{{p.id}}</td>
-      <td>{{p.name}}</td>
-      <td>
-        <a [routerLink]="['/provider/edit', p.id]">Edit</a>
-        <button (click)="deleteOne(p.id)">Delete</button>
-      </td>
-    </tr>
+<div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Fournisseurs</h3>
+    <a class="btn btn-sm btn-primary" routerLink="/provider/create">Ajouter</a>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+  <table class="table table-striped" *ngIf="items.length">
+    <thead>
+      <tr><th>ID</th><th>Societe</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of items">
+        <td>{{p.id}}</td>
+        <td>{{p.companyName}}</td>
+        <td>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/provider/edit', p.id]">Modifier</a>
+          <button class="btn btn-sm btn-danger" (click)="deleteOne(p.id)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
   </table>
-  <div *ngIf="!items?.length">No providers</div>
+  <div *ngIf="!items.length" class="alert alert-secondary">Aucun fournisseur</div>
 </div>

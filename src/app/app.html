@@ -6,11 +6,20 @@
     <nav class="nav">
       <a routerLink="/products">Produits</a>
       <a routerLink="/categories">Catégories</a>
-      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/dashboard">Tableau de bord</a>
     </nav>
     <div class="header-actions">
       <input class="search" placeholder="Rechercher des produits, ex: 'sneakers'" />
       <a class="cart" routerLink="/cart">Panier</a>
+      <ng-container *ngIf="user$ | async as user; else guestLinks">
+        <span class="user">{{ user.firstName || user.email }}</span>
+        <a *ngIf="user.roles?.includes('ADMIN')" routerLink="/admin">Admin</a>
+        <a (click)="logout()" class="link">Se déconnecter</a>
+      </ng-container>
+      <ng-template #guestLinks>
+        <a routerLink="/auth/login">Se connecter</a>
+        <a routerLink="/auth/register">S'inscrire</a>
+      </ng-template>
     </div>
   </div>
 </header>
@@ -21,8 +30,8 @@
       <h1>Bonjour, {{ title() }}</h1>
       <p>Bienvenue sur votre frontend e‑commerce — découvrez des produits sélectionnés avec soin.</p>
       <div class="hero-cta">
-        <a routerLink="/products" class="btn primary">Voir les produits</a>
-        <a routerLink="/categories" class="btn ghost">Parcourir les catégories</a>
+        <a routerLink="/products" class="btn primary">Produits</a>
+        <a routerLink="/categories" class="btn ghost">Catégories</a>
       </div>
     </div>
     <div class="hero-media">

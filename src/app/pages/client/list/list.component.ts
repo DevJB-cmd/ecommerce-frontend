@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Client } from '../../models/client.model';
 import { ClientService } from '../../services/client.service';
+import { RouterLink } from "@angular/router";
 
-@Component({ selector: 'app-client-list', standalone: true, imports: [CommonModule], templateUrl: './list.component.html', styleUrls: ['./list.component.css'] })
+@Component({ selector: 'app-client-list', standalone: true, imports: [CommonModule, RouterLink], templateUrl: './list.component.html', styleUrls: ['./list.component.css'] })
 export class ClientListComponent implements OnInit {
   items: Client[] = []; loading=false; error=''; message='';
   constructor(private s: ClientService) {}

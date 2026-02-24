@@ -1,0 +1,6 @@
+.auth-card { padding:16px; max-width:420px; border-radius:8px; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+label { display:block; margin-bottom:10px; }
+input { width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; }
+.actions { display:flex; gap:12px; align-items:center; margin-top:10px; }
+.link { color:var(--primary,#0d6efd); text-decoration:none; }
+.error { color:#a80000; margin-top:10px; }

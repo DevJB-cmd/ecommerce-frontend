@@ -2,8 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
+import { RouterModule } from '@angular/router';
 
-@Component({ selector: 'app-user-list', standalone: true, imports: [CommonModule], templateUrl: './list.component.html', styleUrls: ['./list.component.css'] })
+@Component({ selector: 'app-user-list', 
+  standalone: true, 
+  imports: [CommonModule, RouterModule], 
+  templateUrl: './list.component.html', 
+  styleUrls: ['./list.component.css'] })
+
 export class UserListComponent implements OnInit {
   items: User[] = []; loading=false; error='';
   constructor(private s: UserService) {}

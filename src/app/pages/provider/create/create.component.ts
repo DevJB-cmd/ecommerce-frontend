@@ -5,7 +5,7 @@ import { ProviderService } from '../../services/provider.service';
 
 @Component({ selector: 'app-provider-create', standalone: true, imports:[CommonModule, ReactiveFormsModule], templateUrl: './create.component.html', styleUrls: ['./create.component.css'] })
 export class ProviderCreateComponent {
-  form: any; error='';
+  form: any; error=''; loading = false;
   constructor(private fb: FormBuilder, private s: ProviderService) { this.form = this.fb.group({ name: ['', Validators.required] }); }
-  submit(){ if(this.form.invalid) return; this.s.create(this.form.value).subscribe({ next: ()=> alert('Saved'), error: ()=> this.error='Erreur' }); }
+  submit(){ if(this.form.invalid) return; this.loading = true; this.s.create(this.form.value).subscribe({ next: ()=> { this.loading = false; alert('Enregistré'); }, error: ()=> { this.loading = false; this.error='Erreur' } }); }
 }
