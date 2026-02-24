@@ -1,6 +1,11 @@
 export interface Driver {
   id: number;
-  name: string;
-  phone: string;
   licenseNumber: string;
+  user?: {
+    id: number;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    email?: string;
+  } | null;
 }

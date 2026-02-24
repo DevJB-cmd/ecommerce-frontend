@@ -8,6 +8,7 @@ import { Provider } from '../../models/provider.model';
 import { Subcategory } from '../../models/subcategory.model';
 import { ProviderService } from '../../services/provider.service';
 import { SubcategoryService } from '../../services/subcategory.service';
+import { PhotoService } from '../../services/photo.service';
 
 @Component({
   selector: 'app-product-create',
@@ -23,12 +24,15 @@ export class ProductCreateComponent {
   error = '';
   providers: Provider[] = [];
   subCategories: Subcategory[] = [];
+  photoPreview: string | null = null;
+  photoError = '';
 
   constructor(
     private fb: FormBuilder,
     private service: ProductService,
     private providerService: ProviderService,
     private subCategoryService: SubcategoryService,
+    private photoService: PhotoService,
     private router: Router
   ) {
     this.form = this.fb.group({
@@ -36,7 +40,8 @@ export class ProductCreateComponent {
       price: [0, [Validators.required]],
       quantity: [0, [Validators.required, Validators.min(0)]],
       providerId: [null, [Validators.required]],
-      subCategoryId: [null, [Validators.required]]
+      subCategoryId: [null, [Validators.required]],
+      photoUrl: ['']
     });
     this.loadDependencies();
   }
@@ -58,10 +63,14 @@ export class ProductCreateComponent {
     };
 
     this.service.create(payload).subscribe({
-      next: () => {
+      next: created => {
+        const createdId = created?.id ?? 0;
+        this.savePhoto(createdId);
         this.message = 'Produit cree';
         this.loading = false;
         this.form.reset();
+        this.photoPreview = null;
+        this.photoError = '';
         this.router.navigate(['/admin', 'products']);
       },
       error: () => {
@@ -69,6 +78,34 @@ export class ProductCreateComponent {
         this.loading = false;
       }
     });
+  }
+
+  onPhotoFileSelected(event: Event): void {
+    this.photoError = '';
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      this.photoError = 'Veuillez choisir une image valide.';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => (this.photoPreview = String(reader.result || ''));
+    reader.onerror = () => (this.photoError = 'Impossible de lire le fichier image.');
+    reader.readAsDataURL(file);
+  }
+
+  clearPhoto(): void {
+    this.form.patchValue({ photoUrl: '' });
+    this.photoPreview = null;
+    this.photoError = '';
+  }
+
+  private savePhoto(id: number): void {
+    const manualUrl = String(this.form.value.photoUrl || '').trim();
+    const source = this.photoPreview || manualUrl;
+    if (!source) return;
+    this.photoService.set('product', id, source);
   }
 
   private loadDependencies(): void {

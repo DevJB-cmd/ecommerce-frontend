@@ -1,82 +1,86 @@
-<!-- App shell: header, hero, featured products, footer -->
-
 <header class="site-header">
   <div class="container header-inner">
-    <a class="brand" routerLink="/">eShop</a>
-    <nav class="nav">
-      <a routerLink="/products">Produits</a>
-      <a routerLink="/categories">Catégories</a>
-      <a routerLink="/dashboard">Tableau de bord</a>
+    <a class="brand" routerLink="/home">
+      <span class="brand-mark">e</span>
+      <span class="brand-text">
+        <strong>eShop</strong>
+        <small>Commerce Platform</small>
+      </span>
+    </a>
+
+    <nav class="nav-links">
+      <a routerLink="/home" routerLinkActive="is-active">Accueil</a>
+      <a routerLink="/products" routerLinkActive="is-active">Produits</a>
+      <a routerLink="/categories" routerLinkActive="is-active">Categories</a>
+      <a *ngIf="(user$ | async) as navUser" routerLink="/admin/dashboard" routerLinkActive="is-active" [hidden]="!isAdmin(navUser)">Dashboard</a>
     </nav>
+
     <div class="header-actions">
-      <input class="search" placeholder="Rechercher des produits, ex: 'sneakers'" />
-      <a class="cart" routerLink="/cart">Panier</a>
+      <input class="search" [(ngModel)]="searchTerm" placeholder="Rechercher un produit..." />
       <ng-container *ngIf="user$ | async as user; else guestLinks">
-        <span class="user">{{ user.firstName || user.email }}</span>
-        <a *ngIf="user.roles?.includes('ADMIN')" routerLink="/admin">Admin</a>
-        <a (click)="logout()" class="link">Se déconnecter</a>
+        <details class="user-menu">
+          <summary class="avatar-trigger">
+            <img *ngIf="userAvatar(user)" class="avatar-img" [src]="userAvatar(user)!" alt="Avatar utilisateur" />
+            <span *ngIf="!userAvatar(user)" class="avatar-fallback">{{ userInitials(user) }}</span>
+          </summary>
+          <div class="user-dropdown">
+            <div class="user-dropdown-head">
+              <strong>{{ user.firstName || user.email }}</strong>
+              <small>{{ user.email }}</small>
+            </div>
+            <a class="user-item" routerLink="/home">Profil</a>
+            <a class="user-item" routerLink="/home">Parametres</a>
+            <a *ngIf="isAdmin(user)" class="user-item" routerLink="/admin/dashboard">Dashboard admin</a>
+            <button class="user-item user-item-danger" type="button" (click)="logout()">Deconnexion</button>
+          </div>
+        </details>
       </ng-container>
       <ng-template #guestLinks>
-        <a routerLink="/auth/login">Se connecter</a>
-        <a routerLink="/auth/register">S'inscrire</a>
+        <a class="top-link" routerLink="/auth/login">Connexion</a>
+        <a class="cta-link" routerLink="/auth/register">Inscription</a>
       </ng-template>
     </div>
   </div>
 </header>
 
-<section class="hero">
-  <div class="container hero-inner">
-    <div class="hero-copy">
-      <h1>Bonjour, {{ title() }}</h1>
-      <p>Bienvenue sur votre frontend e‑commerce — découvrez des produits sélectionnés avec soin.</p>
-      <div class="hero-cta">
-        <a routerLink="/products" class="btn primary">Produits</a>
-        <a routerLink="/categories" class="btn ghost">Catégories</a>
-      </div>
-    </div>
-    <div class="hero-media">
-      <div class="promo-card">Nouvelle collection printemps — Jusqu'à 30% off</div>
-    </div>
-  </div>
-</section>
-
-<section class="features container">
-  <div class="feature">Livraison rapide</div>
-  <div class="feature">Paiement sécurisé</div>
-  <div class="feature">Support 24/7</div>
-</section>
-
-<main class="container site-main">
-  <section class="products-preview">
-    <h2>Produits en vedette</h2>
-    <div class="grid grid-4">
-      <div class="product-card">Produit 1</div>
-      <div class="product-card">Produit 2</div>
-      <div class="product-card">Produit 3</div>
-      <div class="product-card">Produit 4</div>
-    </div>
-  </section>
-
-  <section class="categories-preview">
-    <h3>Catégories populaires</h3>
-    <div class="chips">
-      <span class="chip">Chaussures</span>
-      <span class="chip">Vêtements</span>
-      <span class="chip">Accessoires</span>
-      <span class="chip">Promotions</span>
-    </div>
-  </section>
+<main class="page-shell">
+  <router-outlet></router-outlet>
 </main>
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <div>© {{ year }} eShop</div>
-    <div class="footer-links">
-      <a href="#">À propos</a>
-      <a href="#">Contact</a>
-      <a href="#">Mentions légales</a>
-    </div>
+    <section>
+      <div class="footer-title">eShop - Kossi Jean Eklou</div>
+      <p class="footer-desc">Plateforme e-commerce moderne orientee performance, securite et experience utilisateur.</p>
+    </section>
+
+    <section>
+      <h4>Navigation rapide</h4>
+      <div class="footer-links">
+        <a routerLink="/home">Accueil</a>
+        <a routerLink="/products">Produits</a>
+        <a routerLink="/categories">Categories</a>
+        <a *ngIf="(user$ | async) as footUser" routerLink="/admin/dashboard" [hidden]="!isAdmin(footUser)">Dashboard admin</a>
+      </div>
+    </section>
+
+    <section>
+      <h4>Contact professionnel</h4>
+      <div class="footer-links">
+        <a href="mailto:ekloukossijean@gmail.com">ekloukossijean@gmail.com</a>
+        <a href="https://wa.me/22891098652" target="_blank" rel="noopener">WhatsApp: +228 91098652</a>
+        <a href="https://www.linkedin.com/in/kossi-jean-eklou-b18a263b0/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.facebook.com/jeanbaptist.eklou/" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.instagram.com/ekloujean100" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </section>
+  </div>
+  <div class="container footer-bottom">
+    <span>eShop {{ year }} - Tous droits reserves</span>
+    <span class="footer-badge">Developpe par Kossi Jean Eklou</span>
   </div>
 </footer>
 
-<router-outlet></router-outlet>
+<button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="theme === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre'">
+  <span class="theme-icon">{{ theme === 'dark' ? '☀' : '☾' }}</span>
+</button>

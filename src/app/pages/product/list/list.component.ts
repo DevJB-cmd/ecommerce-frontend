@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../models/product.model';
 import { ProductService } from '../../services/product.service';
+import { PhotoService } from '../../services/photo.service';
 
 @Component({
   selector: 'app-product-list',
@@ -20,7 +21,12 @@ export class ProductListComponent implements OnInit {
   error = '';
   query = '';
 
-  constructor(private service: ProductService, private router: Router, public auth: AuthService) {}
+  constructor(
+    private service: ProductService,
+    private router: Router,
+    public auth: AuthService,
+    private photoService: PhotoService
+  ) {}
 
   ngOnInit(): void {
     this.load();
@@ -61,5 +67,9 @@ export class ProductListComponent implements OnInit {
 
   onEdit(id: number): void {
     this.router.navigate(['/admin','products','edit', id]);
+  }
+
+  photo(id: number): string | null {
+    return this.photoService.get('product', id);
   }
 }

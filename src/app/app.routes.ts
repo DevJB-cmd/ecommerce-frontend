@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
 	{ path: '', redirectTo: 'home', pathMatch: 'full' },
 	{ path: 'home', loadComponent: () => import('./home.component').then(m => m.HomeComponent) },
+	{ path: 'dashboard', redirectTo: 'admin/dashboard', pathMatch: 'full' },
 	{ path: 'products', loadComponent: () => import('./pages/product/list/list.component').then(m => m.ProductListComponent) },
 	{ path: 'product/edit/:id', loadComponent: () => import('./pages/product/edit/edit.component').then(m => m.ProductEditComponent) },
 	{ path: 'product/create', loadComponent: () => import('./pages/product/create/create.component').then(m => m.ProductCreateComponent) },

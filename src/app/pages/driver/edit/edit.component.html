@@ -1,21 +1,28 @@
-<div>
-  <h3>Modifier Chauffeur</h3>
+<div class="card p-4">
+  <h3 class="mb-3">Modifier chauffeur</h3>
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <label>Nom<input formControlName="name" /></label>
-    <label>Téléphone<input formControlName="phone" /></label>
-    <button type="submit">Enregistrer</button>
+    <div class="mb-3"><label class="form-label">Numero permis</label><input class="form-control" formControlName="licenseNumber" /></div>
+    <div class="mb-3">
+      <label class="form-label">Utilisateur</label>
+      <select class="form-select" formControlName="userId">
+        <option [ngValue]="null">Selectionner</option>
+        <option *ngFor="let u of users" [ngValue]="u.id">{{u.firstName}} {{u.lastName}} ({{u.phone}})</option>
+      </select>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3"><label class="form-label">Photo (URL facultative)</label><input class="form-control" formControlName="photoUrl" placeholder="https://..." /></div>
+      <div class="col-md-6 mb-3"><label class="form-label">Ou importer une photo</label><input class="form-control" type="file" accept="image/*" (change)="onPhotoFileSelected($event)" /></div>
+    </div>
+    <div *ngIf="photoPreview || form.value.photoUrl" class="mb-3">
+      <img class="entity-photo-preview" [src]="photoPreview || form.value.photoUrl" alt="Apercu photo chauffeur" />
+      <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="clearPhoto()">Retirer</button>
+    </div>
+    <div *ngIf="photoError" class="alert alert-warning py-2">{{ photoError }}</div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit" [disabled]="loading">Enregistrer</button>
+      <button class="btn btn-outline-secondary" type="button" (click)="form.reset()">Annuler</button>
+    </div>
   </form>
-  <div *ngIf="message" class="success">{{message}}</div>
-  <div *ngIf="error" class="error">{{error}}</div>
-</div>
-<div>
-  <h3>Modifier chauffeur</h3>
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <label>Nom<input formControlName="name" /></label>
-    <label>Téléphone<input formControlName="phone" /></label>
-    <label>Permis<input formControlName="licenseNumber" /></label>
-    <button type="submit">Enregistrer</button>
-  </form>
-  <div *ngIf="message" class="success">{{message}}</div>
-  <div *ngIf="error" class="error">{{error}}</div>
+  <div *ngIf="message" class="alert alert-success mt-3">{{message}}</div>
+  <div *ngIf="error" class="alert alert-danger mt-3">{{error}}</div>
 </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 import { RouterModule } from '@angular/router';
+import { PhotoService } from '../../services/photo.service';
 
 @Component({ selector: 'app-user-list', 
   standalone: true, 
@@ -12,7 +13,8 @@ import { RouterModule } from '@angular/router';
 
 export class UserListComponent implements OnInit {
   items: User[] = []; loading=false; error='';
-  constructor(private s: UserService) {}
+  constructor(private s: UserService, private photoService: PhotoService) {}
   ngOnInit(): void { this.s.getAll().subscribe({ next: d => this.items = d, error: () => this.error='Erreur' }); }
   deleteOne(id:number){ if(!confirm('Confirmer?')) return; this.s.delete(id).subscribe({ next: ()=> this.items = this.items.filter(x=> x.id!==id), error: ()=> this.error='Erreur' }); }
+  photo(id: number): string | null { return this.photoService.get('user', id); }
 }

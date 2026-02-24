@@ -2,9 +2,11 @@ import { Product } from './product.model';
 
 export interface Order {
   id: number;
-  date: string; // ISO
-  total: number;
+  orderDate: string; // yyyy-MM-dd
   status: string;
-  client: number | null; // client id
-  products: Product[];
+  client?: { id: number; address?: string } | null;
+  products?: Product[];
+  // backward compatibility
+  date?: string;
+  total?: number;
 }

@@ -1,12 +1,26 @@
-<div class="auth-card">
-  <h2>Connexion</h2>
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <label>Adresse e-mail<input formControlName="email" type="email" /></label>
-    <label>Mot de passe<input formControlName="password" type="password" /></label>
-    <div class="actions">
-      <button class="btn" type="submit" [disabled]="loading">Se connecter</button>
-      <a routerLink="/auth/register" class="link">S'inscrire</a>
-    </div>
-  </form>
-  <div *ngIf="error" class="error">{{error}}</div>
+<div class="auth-wrap">
+  <div class="auth-card fade-in">
+    <h2>Connexion</h2>
+    <p class="muted">Accedez a votre espace client ou administrateur.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label>Adresse e-mail
+        <input formControlName="email" type="email" [class.invalid]="form.get('email')?.invalid && form.get('email')?.touched" />
+      </label>
+      <small *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="field-error">Email invalide</small>
+
+      <label>Mot de passe
+        <input formControlName="password" type="password" [class.invalid]="form.get('password')?.invalid && form.get('password')?.touched" />
+      </label>
+      <small *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="field-error">Minimum 6 caracteres</small>
+
+      <div class="actions">
+        <button class="btn btn-primary" type="submit" [disabled]="loading">{{ loading ? 'Connexion...' : 'Se connecter' }}</button>
+        <a routerLink="/auth/register" class="link">Creer un compte</a>
+      </div>
+    </form>
+
+    <div *ngIf="success" class="alert alert-success mt-3 slide-in">{{success}}</div>
+    <div *ngIf="error" class="alert alert-danger mt-3 slide-in">{{error}}</div>
+  </div>
 </div>

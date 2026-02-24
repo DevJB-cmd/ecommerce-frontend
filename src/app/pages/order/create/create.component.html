@@ -2,22 +2,28 @@
   <h3 class="mb-3">Nouvelle commande</h3>
   <form [formGroup]="form" (ngSubmit)="submit()">
     <div class="row">
-      <div class="col-md-4 mb-3">
-        <label class="form-label">Date</label>
-        <input class="form-control" formControlName="date" type="date" />
-      </div>
-      <div class="col-md-4 mb-3">
-        <label class="form-label">Total</label>
-        <input class="form-control" formControlName="total" type="number" />
-      </div>
-      <div class="col-md-4 mb-3">
-        <label class="form-label">Statut</label>
-        <input class="form-control" formControlName="status" />
-      </div>
+      <div class="col-md-6 mb-3"><label class="form-label">Date</label><input class="form-control" formControlName="orderDate" type="date" /></div>
+      <div class="col-md-6 mb-3"><label class="form-label">Statut</label><input class="form-control" formControlName="status" /></div>
     </div>
+    <div class="mb-3">
+      <label class="form-label">Client</label>
+      <select class="form-select" formControlName="clientId">
+        <option [ngValue]="null">Selectionner</option>
+        <option *ngFor="let c of clients" [ngValue]="c.id">#{{c.id}} - {{c.address}}</option>
+      </select>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3"><label class="form-label">Photo (URL facultative)</label><input class="form-control" formControlName="photoUrl" placeholder="https://..." /></div>
+      <div class="col-md-6 mb-3"><label class="form-label">Ou importer une photo</label><input class="form-control" type="file" accept="image/*" (change)="onPhotoFileSelected($event)" /></div>
+    </div>
+    <div *ngIf="photoPreview || form.value.photoUrl" class="mb-3">
+      <img class="entity-photo-preview" [src]="photoPreview || form.value.photoUrl" alt="Apercu photo commande" />
+      <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="clearPhoto()">Retirer</button>
+    </div>
+    <div *ngIf="photoError" class="alert alert-warning py-2">{{ photoError }}</div>
     <div class="d-flex gap-2">
-      <button class="btn btn-primary" type="submit" [disabled]="loading">Créer</button>
-      <button class="btn btn-outline-secondary" type="button" (click)="form.reset()">Réinitialiser</button>
+      <button class="btn btn-primary" type="submit" [disabled]="loading">Creer</button>
+      <button class="btn btn-outline-secondary" type="button" (click)="form.reset()">Reinitialiser</button>
     </div>
   </form>
   <div *ngIf="message" class="alert alert-success mt-3">{{message}}</div>

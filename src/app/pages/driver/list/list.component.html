@@ -1,20 +1,24 @@
 <div>
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="m-0">Chauffeurs</h3>
-    <a class="btn btn-sm btn-primary" routerLink="/drivers/create">Ajouter</a>
+    <a class="btn btn-sm btn-primary" [routerLink]="['/admin','drivers','create']">Ajouter</a>
   </div>
   <div *ngIf="error" class="alert alert-danger">{{error}}</div>
   <table class="table table-striped">
     <thead>
-      <tr><th>Nom</th><th>Téléphone</th><th>Permis</th><th>Actions</th></tr>
+      <tr><th>Photo</th><th>Nom</th><th>Telephone</th><th>Permis</th><th>Actions</th></tr>
     </thead>
     <tbody>
       <tr *ngFor="let d of items">
-        <td>{{d.name}}</td>
-        <td>{{d.phone}}</td>
+        <td>
+          <img *ngIf="photo(d.id)" class="entity-photo-thumb" [src]="photo(d.id)!" alt="photo chauffeur" />
+          <span *ngIf="!photo(d.id)">-</span>
+        </td>
+        <td>{{d.user?.firstName}} {{d.user?.lastName}}</td>
+        <td>{{d.user?.phone}}</td>
         <td>{{d.licenseNumber}}</td>
         <td>
-          <button class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/drivers','edit', d.id]">Modifier</button>
+          <button class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/admin','drivers','edit', d.id]">Modifier</button>
           <button class="btn btn-sm btn-danger" (click)="deleteOne(d.id)">Supprimer</button>
         </td>
       </tr>

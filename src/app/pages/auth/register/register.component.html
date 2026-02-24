@@ -1,14 +1,33 @@
-<div class="auth-card">
-  <h2>Inscription</h2>
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <label>Prénom<input formControlName="firstName" /></label>
-    <label>Nom<input formControlName="lastName" /></label>
-    <label>Adresse e-mail<input formControlName="email" type="email" /></label>
-    <label>Mot de passe<input formControlName="password" type="password" /></label>
-    <div class="actions">
-      <button class="btn" type="submit" [disabled]="loading">S'inscrire</button>
-      <a routerLink="/auth/login" class="link">Déjà un compte ?</a>
-    </div>
-  </form>
-  <div *ngIf="error" class="error">{{error}}</div>
+<div class="auth-wrap">
+  <div class="auth-card fade-in">
+    <h2>Inscription</h2>
+    <p class="muted">Creez votre compte en quelques secondes.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="row2">
+        <label>Prenom
+          <input formControlName="firstName" [class.invalid]="form.get('firstName')?.invalid && form.get('firstName')?.touched" />
+        </label>
+        <label>Nom
+          <input formControlName="lastName" [class.invalid]="form.get('lastName')?.invalid && form.get('lastName')?.touched" />
+        </label>
+      </div>
+
+      <label>Adresse e-mail
+        <input formControlName="email" type="email" [class.invalid]="form.get('email')?.invalid && form.get('email')?.touched" />
+      </label>
+
+      <label>Mot de passe
+        <input formControlName="password" type="password" [class.invalid]="form.get('password')?.invalid && form.get('password')?.touched" />
+      </label>
+
+      <div class="actions">
+        <button class="btn btn-primary" type="submit" [disabled]="loading">{{ loading ? 'Inscription...' : "S'inscrire" }}</button>
+        <a routerLink="/auth/login" class="link">J'ai deja un compte</a>
+      </div>
+    </form>
+
+    <div *ngIf="success" class="alert alert-success mt-3 slide-in">{{success}}</div>
+    <div *ngIf="error" class="alert alert-danger mt-3 slide-in">{{error}}</div>
+  </div>
 </div>

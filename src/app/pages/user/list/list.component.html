@@ -7,11 +7,15 @@
   <div *ngIf="error" class="alert alert-danger">{{error}}</div>
   <table class="table table-hover">
     <thead>
-      <tr><th>ID</th><th>Nom</th><th>Email</th><th>Rôles</th><th>Actions</th></tr>
+      <tr><th>ID</th><th>Photo</th><th>Nom</th><th>Email</th><th>Roles</th><th>Actions</th></tr>
     </thead>
     <tbody>
       <tr *ngFor="let u of items">
         <td>{{u.id}}</td>
+        <td>
+          <img *ngIf="photo(u.id)" class="entity-photo-thumb" [src]="photo(u.id)!" alt="photo utilisateur" />
+          <span *ngIf="!photo(u.id)">-</span>
+        </td>
         <td>{{u.firstName || u.email}} {{u.lastName || ''}}</td>
         <td>{{u.email}}</td>
         <td>{{u.roles?.join(', ')}}</td>

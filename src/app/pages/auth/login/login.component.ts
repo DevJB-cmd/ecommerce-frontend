@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
@@ -12,24 +12,42 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  form!: FormGroup;
+  form: FormGroup;
   error = '';
+  success = '';
   loading = false;
-  private returnUrl = '/';
+  private returnUrl = '/home';
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router, private route: ActivatedRoute) {
-    this.form = this.fb.group({ email: [''], password: [''] });
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
     const q = this.route.snapshot.queryParamMap.get('returnUrl');
     if (q) this.returnUrl = q;
   }
 
   submit() {
-    if (this.form.invalid) return;
+    this.error = '';
+    this.success = '';
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.error = 'Veuillez corriger les champs invalides.';
+      return;
+    }
+
     this.loading = true;
     const { email, password } = this.form.value;
     this.auth.login(email, password).subscribe({
-      next: () => { this.loading = false; this.router.navigateByUrl(this.returnUrl); },
-      error: (err) => { this.loading = false; this.error = 'Erreur authentification'; }
+      next: () => {
+        this.loading = false;
+        this.success = 'Connexion reussie. Redirection...';
+        setTimeout(() => this.router.navigateByUrl(this.returnUrl), 700);
+      },
+      error: () => {
+        this.loading = false;
+        this.error = 'Identifiants invalides.';
+      }
     });
   }
 }

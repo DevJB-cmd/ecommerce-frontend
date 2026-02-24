@@ -1,40 +1,42 @@
-<div class="dashboard">
-  <div class="dash-head">
-    <h2>Tableau de bord</h2>
-    <p class="muted">Vue d'ensemble rapide des performances</p>
-  </div>
+<section class="admin-dash">
+  <header class="dash-top">
+    <div>
+      <h2>Dashboard Administrateur</h2>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary" type="button" (click)="refresh()">Actualiser</button>
+      <a class="btn btn-primary" routerLink="/home">Retour vitrine</a>
+    </div>
+  </header>
 
-  <div *ngIf="loading">Chargement...</div>
+  <div *ngIf="loading" class="alert alert-secondary">Chargement du dashboard...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-  <div class="stats">
-    <div class="stat card">
-      <div class="stat-value">{{totalProducts}}</div>
-      <div class="stat-label">Produits</div>
-    </div>
-    <div class="stat card">
-      <div class="stat-value">{{totalOrders}}</div>
-      <div class="stat-label">Commandes</div>
-    </div>
-    <div class="stat card">
-      <div class="stat-value">{{totalUsers}}</div>
-      <div class="stat-label">Utilisateurs</div>
-    </div>
-  </div>
-
-  <section class="recent card">
-    <h3>Commandes récentes</h3>
-    <div class="table-wrap">
-      <table class="table">
-        <thead><tr><th>ID</th><th>Date</th><th>Total</th><th>Statut</th></tr></thead>
-        <tbody>
-          <tr *ngFor="let o of recentOrders">
-            <td>{{o.id}}</td>
-            <td>{{o.date}}</td>
-            <td>{{o.total}}</td>
-            <td>{{o.status}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <section class="dash-grid">
+    <article class="entity-card" *ngFor="let c of cards">
+      <div class="entity-head">
+        <h3>{{ c.label }}</h3>
+        <span class="badge-count">{{ c.count }}</span>
+      </div>
+      <div class="entity-actions">
+        <a class="btn btn-outline-secondary btn-sm" [routerLink]="c.list">Consulter</a>
+        <a class="btn btn-primary btn-sm" [routerLink]="c.create">Ajouter</a>
+      </div>
+    </article>
   </section>
-</div>
+
+  <section class="entity-card orders-panel">
+    <h3>Commandes recentes</h3>
+    <table class="table table-sm">
+      <thead><tr><th>ID</th><th>Date</th><th>Statut</th><th></th></tr></thead>
+      <tbody>
+        <tr *ngFor="let o of recentOrders">
+          <td>#{{ o.id }}</td>
+          <td>{{ o.orderDate || '-' }}</td>
+          <td>{{ o.status || '-' }}</td>
+          <td><a class="btn btn-outline-secondary btn-sm" [routerLink]="['/admin/orders/edit', o.id]">Modifier</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</section>

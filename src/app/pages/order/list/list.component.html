@@ -1,21 +1,25 @@
 <div>
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="m-0">Commandes récentes</h3>
-    <a class="btn btn-sm btn-primary" routerLink="/orders/create">Nouvelle commande</a>
+    <h3 class="m-0">Commandes</h3>
+    <a class="btn btn-sm btn-primary" [routerLink]="['/admin','orders','create']">Nouvelle commande</a>
   </div>
   <div *ngIf="loading">Chargement...</div>
   <table class="table table-hover" *ngIf="!loading">
     <thead>
-      <tr><th>Id</th><th>Date</th><th>Total</th><th>Statut</th><th>Actions</th></tr>
+      <tr><th>Id</th><th>Photo</th><th>Date</th><th>Client</th><th>Statut</th><th>Actions</th></tr>
     </thead>
     <tbody>
       <tr *ngFor="let o of items">
         <td>{{o.id}}</td>
-        <td>{{o.date}}</td>
-        <td>{{o.total | number:'1.2-2'}}</td>
+        <td>
+          <img *ngIf="photo(o.id)" class="entity-photo-thumb" [src]="photo(o.id)!" alt="photo commande" />
+          <span *ngIf="!photo(o.id)">-</span>
+        </td>
+        <td>{{o.orderDate}}</td>
+        <td>{{o.client?.address}}</td>
         <td>{{o.status}}</td>
         <td>
-          <a class="btn btn-sm btn-outline-secondary me-1">Voir</a>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/admin','orders','edit', o.id]">Modifier</a>
           <button class="btn btn-sm btn-danger" (click)="deleteOne(o.id)">Supprimer</button>
         </td>
       </tr>

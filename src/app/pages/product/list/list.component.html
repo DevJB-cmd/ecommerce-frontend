@@ -20,6 +20,7 @@
     <thead>
       <tr>
         <th>ID</th>
+        <th>Photo</th>
         <th>Nom</th>
         <th>Prix</th>
         <th>Quantite</th>
@@ -31,6 +32,10 @@
     <tbody>
       <tr *ngFor="let p of products">
         <td class="id">{{p.id}}</td>
+        <td>
+          <img *ngIf="photo(p.id)" class="entity-photo-thumb" [src]="photo(p.id)!" alt="photo produit" />
+          <span *ngIf="!photo(p.id)">-</span>
+        </td>
         <td>{{p.name}}</td>
         <td class="price">{{p.price | number:'1.2-2'}} EUR</td>
         <td class="stock">{{p.quantity}}</td>

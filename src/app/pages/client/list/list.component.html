@@ -1,21 +1,26 @@
 <div>
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="m-0">Clients</h3>
-    <a class="btn btn-sm btn-primary" routerLink="/clients/create">Ajouter un client</a>
+    <a class="btn btn-sm btn-primary" [routerLink]="['/admin','clients','create']">Ajouter un client</a>
   </div>
 
   <table class="table table-striped">
     <thead>
-      <tr><th>Id</th><th>Nom</th><th>Email</th><th>Téléphone</th><th>Actions</th></tr>
+      <tr><th>Id</th><th>Photo</th><th>Nom</th><th>Email</th><th>Telephone</th><th>Adresse</th><th>Actions</th></tr>
     </thead>
     <tbody>
       <tr *ngFor="let c of items">
         <td>{{c.id}}</td>
-        <td>{{c.name}}</td>
-        <td>{{c.email}}</td>
-        <td>{{c.phone}}</td>
         <td>
-          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/clients/edit', c.id]">Modifier</a>
+          <img *ngIf="photo(c.id)" class="entity-photo-thumb" [src]="photo(c.id)!" alt="photo client" />
+          <span *ngIf="!photo(c.id)">-</span>
+        </td>
+        <td>{{c.user?.firstName}} {{c.user?.lastName}}</td>
+        <td>{{c.user?.email}}</td>
+        <td>{{c.user?.phone}}</td>
+        <td>{{c.address}}</td>
+        <td>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/admin','clients','edit', c.id]">Modifier</a>
           <button class="btn btn-sm btn-danger" (click)="deleteOne(c.id)">Supprimer</button>
         </td>
       </tr>
