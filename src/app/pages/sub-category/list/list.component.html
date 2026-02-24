@@ -11,7 +11,7 @@
       <tr *ngFor="let s of items">
         <td>{{s.id}}</td>
         <td>{{s.name}}</td>
-        <td>{{s.category?.id}}</td>
+        <td>{{s.categoryId}}</td>
         <td>
           <button class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/subcategories','edit', s.id]">Modifier</button>
           <button class="btn btn-sm btn-danger" (click)="deleteOne(s.id)">Supprimer</button>
