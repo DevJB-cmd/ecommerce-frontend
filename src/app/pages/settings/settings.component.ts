@@ -56,6 +56,7 @@ export class SettingsComponent implements OnInit {
   message = '';
   error = '';
   currentUser: User | null = null;
+  private dbUserSnapshot: User | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -75,11 +76,25 @@ export class SettingsComponent implements OnInit {
     this.currentUser = this.auth.currentUser;
     if (!this.currentUser) return;
 
-    this.form.patchValue({
-      firstName: this.currentUser.firstName || '',
-      lastName: this.currentUser.lastName || '',
-      email: this.currentUser.email || '',
-      phone: this.currentUser.phone || ''
+    this.users.getById(this.currentUser.id).subscribe({
+      next: (dbUser) => {
+        this.dbUserSnapshot = dbUser;
+        this.form.patchValue({
+          firstName: dbUser.firstName || this.currentUser?.firstName || '',
+          lastName: dbUser.lastName || this.currentUser?.lastName || '',
+          email: dbUser.email || this.currentUser?.email || '',
+          phone: dbUser.phone || this.currentUser?.phone || ''
+        });
+      },
+      error: () => {
+        // Fallback to current session data if backend profile read fails
+        this.form.patchValue({
+          firstName: this.currentUser?.firstName || '',
+          lastName: this.currentUser?.lastName || '',
+          email: this.currentUser?.email || '',
+          phone: this.currentUser?.phone || ''
+        });
+      }
     });
   }
 
@@ -91,14 +106,18 @@ export class SettingsComponent implements OnInit {
     this.error = '';
 
     const payload: User = {
-      ...this.currentUser,
+      ...(this.dbUserSnapshot || this.currentUser),
       ...this.form.value,
-      roles: this.currentUser.roles || ['USER']
+      id: this.currentUser.id,
+      username: this.dbUserSnapshot?.username || this.currentUser.username || this.form.value.email,
+      password: this.dbUserSnapshot?.password || this.currentUser.password || '',
+      roles: this.dbUserSnapshot?.roles || this.currentUser.roles || ['USER']
     };
 
     this.users.update(this.currentUser.id, payload).subscribe({
       next: (updated) => {
-        this.auth.updateCurrentUser(updated);
+        this.dbUserSnapshot = updated;
+        this.auth.updateCurrentUser({ ...updated, password: null });
         this.message = 'Profil mis a jour avec succes.';
         this.loading = false;
         setTimeout(() => this.router.navigate(['/profile']), 800);

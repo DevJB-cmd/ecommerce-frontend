@@ -4,11 +4,16 @@
       <h2>Dashboard Administrateur</h2>
     </div>
     <div class="d-flex gap-2">
+      <button class="btn btn-success" type="button" (click)="seedPlatformData()" [disabled]="seedLoading">
+        {{ seedLoading ? 'Remplissage en cours...' : 'Remplir le site (bulk)' }}
+      </button>
       <button class="btn btn-outline-secondary" type="button" (click)="refresh()">Actualiser</button>
       <a class="btn btn-primary" routerLink="/home">Retour vitrine</a>
     </div>
   </header>
 
+  <div *ngIf="seedMessage" class="alert alert-success">{{ seedMessage }}</div>
+  <div *ngIf="seedError" class="alert alert-danger">{{ seedError }}</div>
   <div *ngIf="loading" class="alert alert-secondary">Chargement du dashboard...</div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 

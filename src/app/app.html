@@ -1,8 +1,16 @@
 <header class="site-header">
+  <div class="shipping-bar">
+    <div class="container shipping-inner">
+      <span>Livraison gratuite des 50 000 FCFA</span>
+      <span>|</span>
+      <span>Retours gratuits</span>
+    </div>
+  </div>
+
   <div class="container header-inner">
     <a class="brand" routerLink="/home">
       <span class="brand-mark">
-        <img src="assets/logo-jb.svg" class="brand-logo" alt="Logo Chez JeanBaptiste" />
+        <img src="/assets/logo-jb.svg" class="brand-logo" alt="Logo Chez JeanBaptiste" />
       </span>
       <span class="brand-text">
         <strong>Chez JeanBaptiste</strong>
@@ -33,12 +41,22 @@
             <button class="user-item user-item-danger" type="button" (click)="logout()">Deconnexion</button>
           </div>
         </details>
-        <a class="top-link" routerLink="/profile">Mon Compte</a>
-        <a class="top-link" routerLink="/cart">Panier <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span></a>
+        <a class="icon-link" routerLink="/profile" aria-label="Mon compte" title="Mon compte">
+          <span aria-hidden="true">👤</span>
+        </a>
+        <a class="icon-link" routerLink="/cart" aria-label="Panier" title="Panier">
+          <span aria-hidden="true">🛒</span>
+          <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+        </a>
       </ng-container>
       <ng-template #guestLinks>
-        <a class="top-link" routerLink="/cart">Panier <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span></a>
-        <a class="top-link" routerLink="/auth/login">Connexion</a>
+        <a class="icon-link" routerLink="/cart" aria-label="Panier" title="Panier">
+          <span aria-hidden="true">🛒</span>
+          <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+        </a>
+        <a class="icon-link" routerLink="/auth/login" aria-label="Connexion" title="Connexion">
+          <span aria-hidden="true">👤</span>
+        </a>
         <a class="cta-link" routerLink="/auth/register">Inscription</a>
       </ng-template>
     </div>
@@ -46,11 +64,11 @@
 
   <nav class="header-categories">
     <div class="container header-categories-inner">
-      <a routerLink="/products">Nouveautes</a>
-      <a routerLink="/products" [queryParams]="{ category: 'Vetements' }">Vetements</a>
-      <a routerLink="/products" [queryParams]="{ category: 'Chaussures' }">Chaussures</a>
-      <a routerLink="/products" [queryParams]="{ category: 'Accessoires' }">Accessoires</a>
-      <a routerLink="/products" [queryParams]="{ q: 'promo' }">Promotions</a>
+      <a routerLink="/home">Nouveautes</a>
+      <a routerLink="/home" [queryParams]="{ category: 'Vetements' }">Vetements</a>
+      <a routerLink="/home" [queryParams]="{ category: 'Chaussures' }">Chaussures</a>
+      <a routerLink="/home" [queryParams]="{ category: 'Accessoires' }">Accessoires</a>
+      <a routerLink="/home" [queryParams]="{ q: 'promo' }">Promotions</a>
     </div>
   </nav>
 </header>
@@ -58,6 +76,28 @@
 <main class="page-shell">
   <router-outlet></router-outlet>
 </main>
+
+<section class="newsletter-strip">
+  <div class="container newsletter-inner">
+    <div>
+      <h3>Inscrivez-vous a notre Newsletter</h3>
+      <p>Recevez les meilleures offres et nouveautes chaque semaine.</p>
+    </div>
+    <form class="newsletter-form" (ngSubmit)="subscribeNewsletter()">
+      <input
+        class="form-control"
+        type="email"
+        [(ngModel)]="newsletterEmail"
+        name="newsletterEmail"
+        placeholder="Votre adresse email"
+        required />
+      <button class="btn btn-primary" type="submit">S'inscrire</button>
+    </form>
+  </div>
+  <div class="container" *ngIf="newsletterMessage">
+    <div class="alert alert-success mt-2 mb-0">{{ newsletterMessage }}</div>
+  </div>
+</section>
 
 <footer class="site-footer">
   <div class="container footer-inner">

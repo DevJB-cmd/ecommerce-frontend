@@ -10,6 +10,7 @@ import { ProviderService } from '../services/provider.service';
 import { SubcategoryService } from '../services/subcategory.service';
 import { ClientService } from '../services/client.service';
 import { DriverService } from '../services/driver.service';
+import { SeedDataService, SeedSummary } from '../services/seed-data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +23,9 @@ export class DashboardComponent implements OnInit {
   loading = false;
   error = '';
   pendingRequests = 0;
+  seedLoading = false;
+  seedMessage = '';
+  seedError = '';
 
   cards = [
     { key: 'users', label: 'Utilisateurs', count: 0, list: '/admin/users', create: '/admin/users/create' },
@@ -44,7 +48,8 @@ export class DashboardComponent implements OnInit {
     private providers: ProviderService,
     private subcategories: SubcategoryService,
     private clients: ClientService,
-    private drivers: DriverService
+    private drivers: DriverService,
+    private seedData: SeedDataService
   ) {}
 
   ngOnInit(): void {
@@ -76,6 +81,21 @@ export class DashboardComponent implements OnInit {
         this.finishRequest();
       }
     });
+  }
+
+  async seedPlatformData(): Promise<void> {
+    this.seedLoading = true;
+    this.seedMessage = '';
+    this.seedError = '';
+    try {
+      const summary = await this.seedData.seedLargeDemoData();
+      this.seedMessage = this.summaryText(summary);
+      this.refresh();
+    } catch {
+      this.seedError = "Le remplissage automatique a echoue.";
+    } finally {
+      this.seedLoading = false;
+    }
   }
 
   private setCount(key: string, count: number): void {
@@ -116,5 +136,18 @@ export class DashboardComponent implements OnInit {
     if (payload && typeof payload.count === 'number') return payload.count;
     if (payload && typeof payload.total === 'number') return payload.total;
     return this.toItems<any>(payload).length;
+  }
+
+  private summaryText(summary: SeedSummary): string {
+    return [
+      'Donnees ajoutees:',
+      `${summary.categoriesCreated} categories`,
+      `${summary.subcategoriesCreated} sous-categories`,
+      `${summary.providersCreated} fournisseurs`,
+      `${summary.usersCreated} utilisateurs`,
+      `${summary.clientsCreated} clients`,
+      `${summary.productsCreated} produits`,
+      `${summary.ordersCreated} commandes`
+    ].join(' ');
   }
 }

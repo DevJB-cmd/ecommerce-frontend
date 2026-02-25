@@ -6,6 +6,9 @@ import { PhotoService } from '../services/photo.service';
 import { AuthService } from '../services/auth.service';
 import { ClientService } from '../services/client.service';
 import { OrderService } from '../services/order.service';
+import { Client } from '../models/client.model';
+import { User } from '../models/user.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -135,52 +138,94 @@ export class CartComponent implements OnInit {
     }
 
     this.loading = true;
-    this.clients.getAll().subscribe({
-      next: (clients) => {
-        const client = (clients || []).find(c => c.user?.id === user.id);
-        if (!client) {
-          this.loading = false;
-          this.error = 'Aucun client lie a ce compte. Creez un client d abord.';
+    this.getOrCreateClient(user).subscribe({
+      next: (client) => {
+        const date = new Date().toISOString().slice(0, 10);
+        const productIds = this.items.map(i => i.product.id).filter((id) => !!id);
+        const payloads: any[] = [
+          {
+            orderDate: date,
+            date,
+            status: 'EN_ATTENTE',
+            client: { id: client.id },
+            products: productIds.map((id) => ({ id })),
+            productIds
+          },
+          {
+            orderDate: date,
+            status: 'PENDING',
+            client: { id: client.id },
+            products: productIds.map((id) => ({ id }))
+          },
+          {
+            date,
+            status: 'PENDING',
+            clientId: client.id,
+            productIds
+          },
+          {
+            orderDate: date,
+            status: 'PENDING',
+            client: { id: client.id }
+          }
+        ];
+
+        this.tryCreateOrder(payloads, 0);
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = err?.error?.message || err?.message || 'Impossible de preparer le client pour la commande.';
+      }
+    });
+  }
+
+  private getOrCreateClient(user: User): Observable<Client> {
+    return new Observable<Client>((observer) => {
+      this.clients.getAll().subscribe({
+        next: (clients) => {
+          const existing = (clients || []).find(c => c.user?.id === user.id);
+          if (existing) {
+            observer.next(existing);
+            observer.complete();
+            return;
+          }
+          const payload: Partial<Client> = {
+            address: user.email ? `Adresse a completer - ${user.email}` : 'Adresse a completer',
+            user: { id: user.id }
+          };
+          this.clients.create(payload).subscribe({
+            next: (created) => {
+              observer.next(created);
+              observer.complete();
+            },
+            error: (err) => observer.error(err)
+          });
+        },
+        error: (err) => observer.error(err)
+      });
+    });
+  }
+
+  private tryCreateOrder(payloads: any[], index: number): void {
+    if (index >= payloads.length) {
+      this.loading = false;
+      this.error = 'Erreur lors de la commande. Le backend a rejete tous les formats envoyes.';
+      return;
+    }
+
+    this.orders.create(payloads[index]).subscribe({
+      next: () => {
+        this.loading = false;
+        this.message = 'Commande enregistree avec succes.';
+        this.cart.clear();
+      },
+      error: (err) => {
+        if (index < payloads.length - 1) {
+          this.tryCreateOrder(payloads, index + 1);
           return;
         }
-
-        const payload: any = {
-          orderDate: new Date().toISOString().slice(0, 10),
-          status: 'EN_ATTENTE',
-          client: { id: client.id },
-          products: this.items.map(i => ({ id: i.product.id }))
-        };
-
-        this.orders.create(payload).subscribe({
-          next: () => {
-            this.loading = false;
-            this.message = 'Commande enregistree avec succes.';
-            this.cart.clear();
-          },
-          error: () => {
-            // Fallback for backends that do not persist product lines yet.
-            const fallbackPayload: any = {
-              orderDate: payload.orderDate,
-              status: payload.status,
-              client: payload.client
-            };
-            this.orders.create(fallbackPayload).subscribe({
-              next: () => {
-                this.loading = false;
-                this.message = 'Commande enregistree avec succes.';
-                this.cart.clear();
-              },
-              error: (err2) => {
-                this.loading = false;
-                this.error = err2?.error?.message || err2?.message || 'Erreur lors de la commande.';
-              }
-            });
-          }
-        });
-      },
-      error: () => {
         this.loading = false;
-        this.error = 'Impossible de verifier le client utilisateur.';
+        this.error = err?.error?.message || err?.message || 'Erreur lors de la commande.';
       }
     });
   }

@@ -26,6 +26,8 @@ export class App {
   theme: 'light' | 'dark' = 'light';
   searchTerm = '';
   cartCount = 0;
+  newsletterEmail = '';
+  newsletterMessage = '';
 
   constructor(private auth: AuthService, private photos: PhotoService, private router: Router, private cart: CartService) {
     this.theme = this.readStoredTheme();
@@ -66,6 +68,14 @@ export class App {
   searchProducts(): void {
     const q = String(this.searchTerm || '').trim();
     this.router.navigate(['/products'], { queryParams: q ? { q } : {} });
+  }
+
+  subscribeNewsletter(): void {
+    const email = String(this.newsletterEmail || '').trim();
+    if (!email) return;
+    this.newsletterMessage = `Inscription enregistree pour ${email}`;
+    this.newsletterEmail = '';
+    setTimeout(() => (this.newsletterMessage = ''), 2500);
   }
 
   private readStoredTheme(): 'light' | 'dark' {

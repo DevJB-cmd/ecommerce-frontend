@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2751"/>
+      <stop offset="32%" stop-color="#304b88"/>
+      <stop offset="62%" stop-color="#f08f54"/>
+      <stop offset="100%" stop-color="#2e2140"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="58%" r="26%">
+      <stop offset="0%" stop-color="#ffd98b" stop-opacity="1"/>
+      <stop offset="38%" stop-color="#ffb164" stop-opacity=".78"/>
+      <stop offset="100%" stop-color="#ff8e55" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#423c68"/>
+      <stop offset="100%" stop-color="#191d35"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <ellipse cx="960" cy="640" rx="740" ry="250" fill="url(#sunGlow)"/>
+
+  <circle cx="960" cy="620" r="125" fill="#ffcf82" opacity=".9"/>
+  <circle cx="960" cy="620" r="90" fill="#ffe4a8" opacity=".85"/>
+
+  <rect y="700" width="1920" height="380" fill="url(#sea)"/>
+  <path d="M0 760 C240 740 360 785 600 770 C810 755 1010 725 1215 748 C1450 774 1650 740 1920 760 L1920 1080 L0 1080 Z"
+        fill="#2a3157" opacity=".7"/>
+  <path d="M0 790 C270 760 520 820 790 785 C1010 755 1270 820 1520 790 C1680 770 1790 780 1920 792"
+        stroke="#e6a35f" stroke-opacity=".35" stroke-width="4" fill="none"/>
+</svg>
