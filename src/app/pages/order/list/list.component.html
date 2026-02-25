@@ -19,6 +19,7 @@
         <td>{{o.client?.address}}</td>
         <td>{{o.status}}</td>
         <td>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/admin','orders','details', o.id]">Details</a>
           <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/admin','orders','edit', o.id]">Modifier</a>
           <button class="btn btn-sm btn-danger" (click)="deleteOne(o.id)">Supprimer</button>
         </td>

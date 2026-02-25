@@ -18,6 +18,7 @@
         <td>{{p.companyName}}</td>
         <td>{{p.phone}}</td>
         <td>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/admin','providers','details', p.id]">Details</a>
           <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/admin','providers','edit', p.id]">Modifier</a>
           <button class="btn btn-sm btn-danger" (click)="deleteOne(p.id)">Supprimer</button>
         </td>

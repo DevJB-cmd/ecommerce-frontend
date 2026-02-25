@@ -7,6 +7,7 @@ import { Order } from '../../models/order.model';
 import { Client } from '../../models/client.model';
 import { Router } from '@angular/router';
 import { PhotoService } from '../../services/photo.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({ selector: 'app-order-create', standalone: true, imports: [CommonModule, ReactiveFormsModule], templateUrl: './create.component.html', styleUrls: ['./create.component.css'] })
 export class OrderCreateComponent {
@@ -28,9 +29,15 @@ export class OrderCreateComponent {
 
   submit(){
     if(this.form.invalid){ this.error='Formulaire invalide'; return; }
+    this.error = '';
+    this.message = '';
     this.loading=true;
     const v = this.form.value;
-    const payload: Order = { id: 0, orderDate: v.orderDate, status: v.status, client: { id: Number(v.clientId) } };
+    const payload: Partial<Order> = {
+      orderDate: String(v.orderDate || ''),
+      status: String(v.status || '').trim(),
+      client: { id: Number(v.clientId) }
+    };
     this.s.create(payload).subscribe({
       next: (created)=>{
         this.photoService.set('order', created?.id, this.photoPreview || String(v.photoUrl || '').trim());
@@ -40,7 +47,13 @@ export class OrderCreateComponent {
         this.photoError = '';
         this.router.navigate(['/admin','orders']);
       },
-      error: ()=>{ this.error='Erreur creation commande'; this.loading=false; }
+      error: (err: HttpErrorResponse)=>{
+        const backendMessage = typeof err.error === 'string'
+          ? err.error
+          : err.error?.message || err.message;
+        this.error = backendMessage || 'Erreur creation commande';
+        this.loading=false;
+      }
     });
   }
 

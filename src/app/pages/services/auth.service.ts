@@ -32,6 +32,13 @@ export class AuthService {
     this._user$.next(null);
   }
 
+  updateCurrentUser(user: User) {
+    if (!user) return;
+    const token = this.getToken();
+    if (!token) return;
+    this.saveSession(token, user);
+  }
+
   private saveSession(token: string, user: User) {
     localStorage.setItem(this.tokenKey, token);
     localStorage.setItem(this.userKey, JSON.stringify(user));

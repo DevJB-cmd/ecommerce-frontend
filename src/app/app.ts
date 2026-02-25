@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PagesModule } from './pages/pages.module';
@@ -8,6 +8,7 @@ import { AuthInterceptor } from './core/auth.interceptor';
 import { AuthService } from './pages/services/auth.service';
 import { PhotoService } from './pages/services/photo.service';
 import { User } from './pages/models/user.model';
+import { CartService } from './pages/services/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -24,10 +25,14 @@ export class App {
   readonly year = new Date().getFullYear();
   theme: 'light' | 'dark' = 'light';
   searchTerm = '';
+  cartCount = 0;
 
-  constructor(private auth: AuthService, private photos: PhotoService) {
+  constructor(private auth: AuthService, private photos: PhotoService, private router: Router, private cart: CartService) {
     this.theme = this.readStoredTheme();
     this.applyTheme(this.theme);
+    this.cart.items$.subscribe(() => {
+      this.cartCount = this.cart.count;
+    });
   }
 
   get user$() { return this.auth.user$; }
@@ -56,6 +61,11 @@ export class App {
     try {
       localStorage.setItem('theme_mode', this.theme);
     } catch {}
+  }
+
+  searchProducts(): void {
+    const q = String(this.searchTerm || '').trim();
+    this.router.navigate(['/products'], { queryParams: q ? { q } : {} });
   }
 
   private readStoredTheme(): 'light' | 'dark' {

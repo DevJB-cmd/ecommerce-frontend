@@ -18,7 +18,7 @@ export class ProductService {
   getById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.base}/findById/${id}`);
   }
-  create(data: Product): Observable<Product> {
+  create(data: Partial<Product>): Observable<Product> {
     return this.http.post<Product>(`${this.base}/save`, data);
   }
   update(id: number, data: Product): Observable<Product> {

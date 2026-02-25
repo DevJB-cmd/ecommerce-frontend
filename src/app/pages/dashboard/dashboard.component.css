@@ -8,11 +8,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
   padding: 1rem 1.1rem;
-  box-shadow: var(--shadow);
 }
 
 .dash-top h2 {
@@ -32,11 +28,13 @@
 }
 
 .entity-card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
   padding: 1rem;
-  box-shadow: var(--shadow);
+  isolation: isolate;
+}
+
+.entity-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .entity-head {

@@ -1,22 +1,21 @@
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" routerLink="/home">
-      <span class="brand-mark">e</span>
+      <span class="brand-mark">
+        <img src="assets/logo-jb.svg" class="brand-logo" alt="Logo Chez JeanBaptiste" />
+      </span>
       <span class="brand-text">
-        <strong>eShop</strong>
+        <strong>Chez JeanBaptiste</strong>
         <small>Commerce Platform</small>
       </span>
     </a>
 
-    <nav class="nav-links">
-      <a routerLink="/home" routerLinkActive="is-active">Accueil</a>
-      <a routerLink="/products" routerLinkActive="is-active">Produits</a>
-      <a routerLink="/categories" routerLinkActive="is-active">Categories</a>
-      <a *ngIf="(user$ | async) as navUser" routerLink="/admin/dashboard" routerLinkActive="is-active" [hidden]="!isAdmin(navUser)">Dashboard</a>
-    </nav>
+    <div class="header-search-wrap">
+      <input class="search" [(ngModel)]="searchTerm" (keyup.enter)="searchProducts()" placeholder="Rechercher des produits..." />
+      <button class="btn btn-sm btn-outline-secondary" type="button" (click)="searchProducts()">Rechercher</button>
+    </div>
 
     <div class="header-actions">
-      <input class="search" [(ngModel)]="searchTerm" placeholder="Rechercher un produit..." />
       <ng-container *ngIf="user$ | async as user; else guestLinks">
         <details class="user-menu">
           <summary class="avatar-trigger">
@@ -28,19 +27,32 @@
               <strong>{{ user.firstName || user.email }}</strong>
               <small>{{ user.email }}</small>
             </div>
-            <a class="user-item" routerLink="/home">Profil</a>
-            <a class="user-item" routerLink="/home">Parametres</a>
+            <a class="user-item" routerLink="/profile">Mon compte</a>
+            <a class="user-item" routerLink="/settings">Parametres</a>
             <a *ngIf="isAdmin(user)" class="user-item" routerLink="/admin/dashboard">Dashboard admin</a>
             <button class="user-item user-item-danger" type="button" (click)="logout()">Deconnexion</button>
           </div>
         </details>
+        <a class="top-link" routerLink="/profile">Mon Compte</a>
+        <a class="top-link" routerLink="/cart">Panier <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span></a>
       </ng-container>
       <ng-template #guestLinks>
+        <a class="top-link" routerLink="/cart">Panier <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span></a>
         <a class="top-link" routerLink="/auth/login">Connexion</a>
         <a class="cta-link" routerLink="/auth/register">Inscription</a>
       </ng-template>
     </div>
   </div>
+
+  <nav class="header-categories">
+    <div class="container header-categories-inner">
+      <a routerLink="/products">Nouveautes</a>
+      <a routerLink="/products" [queryParams]="{ category: 'Vetements' }">Vetements</a>
+      <a routerLink="/products" [queryParams]="{ category: 'Chaussures' }">Chaussures</a>
+      <a routerLink="/products" [queryParams]="{ category: 'Accessoires' }">Accessoires</a>
+      <a routerLink="/products" [queryParams]="{ q: 'promo' }">Promotions</a>
+    </div>
+  </nav>
 </header>
 
 <main class="page-shell">
@@ -50,7 +62,7 @@
 <footer class="site-footer">
   <div class="container footer-inner">
     <section>
-      <div class="footer-title">eShop - Kossi Jean Eklou</div>
+      <div class="footer-title">Chez JeanBaptiste - Kossi Jean Eklou</div>
       <p class="footer-desc">Plateforme e-commerce moderne orientee performance, securite et experience utilisateur.</p>
     </section>
 
@@ -76,11 +88,11 @@
     </section>
   </div>
   <div class="container footer-bottom">
-    <span>eShop {{ year }} - Tous droits reserves</span>
+    <span>Chez JeanBaptiste {{ year }} - Tous droits reserves</span>
     <span class="footer-badge">Developpe par Kossi Jean Eklou</span>
   </div>
 </footer>
 
 <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="theme === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre'">
-  <span class="theme-icon">{{ theme === 'dark' ? '☀' : '☾' }}</span>
+  <span class="theme-icon">{{ theme === 'dark' ? 'L' : 'D' }}</span>
 </button>

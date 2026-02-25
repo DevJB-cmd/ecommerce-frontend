@@ -53,8 +53,7 @@ export class ProductCreateComponent {
     }
     this.loading = true;
     const value = this.form.value;
-    const payload: Product = {
-      id: 0,
+    const payload: Partial<Product> = {
       name: value.name,
       price: Number(value.price),
       quantity: Number(value.quantity),

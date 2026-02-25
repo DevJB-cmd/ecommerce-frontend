@@ -1,5 +1,5 @@
 <section class="admin-dash">
-  <header class="dash-top">
+  <header class="dash-top card card-cut rounded-4 border-0 shadow-sm">
     <div>
       <h2>Dashboard Administrateur</h2>
     </div>
@@ -13,7 +13,7 @@
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
   <section class="dash-grid">
-    <article class="entity-card" *ngFor="let c of cards">
+    <article class="entity-card card card-wave rounded-4 border-0 shadow-sm" *ngFor="let c of cards">
       <div class="entity-head">
         <h3>{{ c.label }}</h3>
         <span class="badge-count">{{ c.count }}</span>
@@ -25,7 +25,7 @@
     </article>
   </section>
 
-  <section class="entity-card orders-panel">
+  <section class="entity-card orders-panel card card-tilt rounded-4 border-0 shadow-sm">
     <h3>Commandes recentes</h3>
     <table class="table table-sm">
       <thead><tr><th>ID</th><th>Date</th><th>Statut</th><th></th></tr></thead>

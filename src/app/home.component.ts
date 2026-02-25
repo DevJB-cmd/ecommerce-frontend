@@ -1,128 +1,161 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Product } from './pages/models/product.model';
 import { Category } from './pages/models/category.model';
 import { ProductService } from './pages/services/product.service';
 import { CategoryService } from './pages/services/category.service';
 import { PhotoService } from './pages/services/photo.service';
+import { CartService } from './pages/services/cart.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <section class="home-hero">
-      <div class="hero-left">
-        <p class="eyebrow">Premium commerce experience</p>
-        <h1>Decouvrez les produits par categories</h1>
-        <p class="hero-sub">
-          Parcourez rapidement le catalogue avec visuels, categories et informations utiles.
-        </p>
-        <div class="hero-cta">
-          <a class="btn btn-primary" routerLink="/products">Explorer les produits</a>
-          <a class="btn btn-outline-secondary" routerLink="/categories">Voir les categories</a>
+    <section class="home-shop container">
+      <article class="hero-shop card border-0 shadow-sm">
+        <img *ngIf="currentHeroImage" [src]="currentHeroImage" alt="Banniere" class="hero-bg" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="hero-discount">-50% sur les chemises</p>
+          <h1>Elegance & Style</h1>
+          <a class="btn btn-primary" routerLink="/products">Acheter maintenant</a>
         </div>
-      </div>
+        <div class="hero-dots">
+          <span *ngFor="let _ of heroImages; let i = index" [class.active]="i === heroIndex"></span>
+        </div>
+      </article>
 
-      <div class="hero-right">
-        <article class="glass-card">
-          <h3>Catalogue dynamique</h3>
-          <p>Mise a jour automatique des elements en fonction de vos donnees backend.</p>
-          <div class="kpis">
-            <div><strong>{{ products.length }}</strong><span>Produits</span></div>
-            <div><strong>{{ categories.length }}</strong><span>Categories</span></div>
-            <div><strong>{{ productsWithPhoto }}</strong><span>Avec photo</span></div>
-          </div>
-        </article>
-      </div>
-    </section>
+      <section class="shop-section card border-0 shadow-sm">
+        <div class="section-header">
+          <h2>Produits en Vedette</h2>
+        </div>
+        <div class="featured-grid">
+          <article class="featured-card" *ngFor="let p of featuredProducts" (click)="openProduct(p.id)">
+            <div class="featured-img-wrap">
+              <img *ngIf="productPhoto(p)" [src]="productPhoto(p)!" class="featured-img" alt="produit" />
+              <div *ngIf="!productPhoto(p)" class="featured-img featured-placeholder">PHOTO</div>
+            </div>
+            <div class="featured-body">
+              <h3>{{ p.name }}</h3>
+              <div class="stars">*****</div>
+              <div class="price-row">
+                <strong>{{ p.price | number:'1.0-0' }} FCFA</strong>
+                <button class="btn btn-sm btn-dark" (click)="addToCart(p, $event)">Ajouter</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
 
-    <section class="feature-band">
-      <div class="feature-item">Tri par categorie</div>
-      <div class="feature-item">Fiches produits visuelles</div>
-      <div class="feature-item">Navigation rapide</div>
-      <div class="feature-item">Catalogue en temps reel</div>
-    </section>
+      <section class="shop-section card border-0 shadow-sm">
+        <div class="section-header">
+          <h2>Categories Populaires</h2>
+        </div>
+        <div class="categories-row">
+          <a class="category-box" *ngFor="let c of popularCategories" [routerLink]="['/products']" [queryParams]="{ category: c }">
+            <span>{{ c }}</span>
+            <small>&gt;</small>
+          </a>
+        </div>
+      </section>
 
-    <section class="spotlight">
-      <h2>Produits disponibles</h2>
+      <section class="shop-section card border-0 shadow-sm">
+        <div class="section-header">
+          <h2>Nouveautes</h2>
+          <a class="btn btn-sm btn-outline-secondary" routerLink="/products">Voir tout</a>
+        </div>
+        <div class="new-grid">
+          <article class="new-card" *ngFor="let p of newProducts" (click)="openProduct(p.id)">
+            <img *ngIf="productPhoto(p)" [src]="productPhoto(p)!" class="new-img" alt="nouveau produit" />
+            <div *ngIf="!productPhoto(p)" class="new-img featured-placeholder">PHOTO</div>
+            <div class="new-body">
+              <h3>{{ p.name }}</h3>
+              <button class="btn btn-sm btn-outline-secondary" (click)="addToCart(p, $event)">Ajouter</button>
+            </div>
+          </article>
+        </div>
+      </section>
 
-      <div *ngIf="loading" class="alert alert-secondary">Chargement des produits...</div>
-      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-
-      <div class="home-products" *ngIf="!loading">
-        <article class="home-product-card" *ngFor="let p of products | slice:0:12">
-          <div class="home-product-image-wrap">
-            <img *ngIf="productPhoto(p)" [src]="productPhoto(p)!" class="home-product-image" alt="Photo produit" />
-            <div *ngIf="!productPhoto(p)" class="home-product-image home-product-placeholder">PHOTO</div>
-          </div>
-
-          <div class="home-product-body">
-            <h3>{{ p.name }}</h3>
-            <p class="home-product-category">Categorie: {{ categoryLabel(p) }}</p>
-            <p class="home-product-price">{{ p.price | number:'1.0-2' }} EUR</p>
-            <a class="btn btn-outline-secondary btn-sm" [routerLink]="['/products']">Voir</a>
-          </div>
-        </article>
-      </div>
+      <div *ngIf="addedMessage" class="cart-toast">{{ addedMessage }}</div>
     </section>
   `
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   categories: Category[] = [];
-  loading = false;
-  error = '';
+  featuredProducts: Product[] = [];
+  newProducts: Product[] = [];
+  popularCategories: string[] = [];
+  heroImages: string[] = [];
+  heroIndex = 0;
+  addedMessage = '';
+  private sliderTimer: any;
+  private toastTimer: any;
 
   constructor(
     private productsService: ProductService,
     private categoriesService: CategoryService,
-    private photos: PhotoService
+    private photos: PhotoService,
+    private cart: CartService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loading = true;
-    this.error = '';
-
-    this.productsService.getAll().subscribe({
-      next: data => {
-        this.products = this.toItems<Product>(data);
-        this.loading = false;
+    this.categoriesService.getAll().subscribe({
+      next: (categories) => {
+        this.categories = categories || [];
+        this.popularCategories = this.categories.map(c => c.name).filter(Boolean).slice(0, 5);
       },
-      error: () => {
-        this.error = 'Impossible de charger les produits.';
-        this.loading = false;
-      }
+      error: () => {}
     });
 
-    this.categoriesService.getAll().subscribe({
-      next: data => (this.categories = this.toItems<Category>(data)),
+    this.productsService.getAll().subscribe({
+      next: (products) => {
+        this.products = products || [];
+        this.featuredProducts = this.products.slice(0, 5);
+        this.newProducts = [...this.products].slice(-5).reverse();
+        this.heroImages = this.featuredProducts
+          .map(p => this.productPhoto(p))
+          .filter((x): x is string => !!x);
+        this.startSlider();
+      },
       error: () => {}
     });
   }
 
-  get productsWithPhoto(): number {
-    return this.products.filter(p => !!this.productPhoto(p)).length;
+  ngOnDestroy(): void {
+    if (this.sliderTimer) clearInterval(this.sliderTimer);
+    if (this.toastTimer) clearTimeout(this.toastTimer);
+  }
+
+  get currentHeroImage(): string | null {
+    if (!this.heroImages.length) return null;
+    return this.heroImages[this.heroIndex % this.heroImages.length];
   }
 
   productPhoto(product: Product): string | null {
     return this.photos.get('product', product.id) || product.imageUrl || null;
   }
 
-  categoryLabel(product: Product): string {
-    if (product.subCategory?.name) return product.subCategory.name;
-    if (typeof product.category === 'number') {
-      return this.categories.find(c => c.id === product.category)?.name || '-';
-    }
-    return '-';
+  openProduct(id: number): void {
+    this.router.navigate(['/products', id]);
   }
 
-  private toItems<T>(payload: any): T[] {
-    if (Array.isArray(payload)) return payload as T[];
-    if (payload && Array.isArray(payload.content)) return payload.content as T[];
-    if (payload && Array.isArray(payload.data)) return payload.data as T[];
-    if (payload && Array.isArray(payload.items)) return payload.items as T[];
-    return [];
+  addToCart(product: Product, event: Event): void {
+    event.stopPropagation();
+    this.cart.add(product, 1);
+    this.addedMessage = `${product.name} ajoute au panier.`;
+    if (this.toastTimer) clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => (this.addedMessage = ''), 1800);
+  }
+
+  private startSlider(): void {
+    if (this.sliderTimer) clearInterval(this.sliderTimer);
+    if (this.heroImages.length <= 1) return;
+    this.sliderTimer = setInterval(() => {
+      this.heroIndex = (this.heroIndex + 1) % this.heroImages.length;
+    }, 5000);
   }
 }

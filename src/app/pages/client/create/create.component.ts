@@ -7,6 +7,7 @@ import { Client } from '../../models/client.model';
 import { User } from '../../models/user.model';
 import { Router } from '@angular/router';
 import { PhotoService } from '../../services/photo.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({ selector: 'app-client-create', standalone: true, imports: [CommonModule, ReactiveFormsModule], templateUrl: './create.component.html', styleUrls: ['./create.component.css'] })
 export class ClientCreateComponent {
@@ -28,9 +29,11 @@ export class ClientCreateComponent {
 
   submit(){
     if(this.form.invalid){ this.error='Formulaire invalide'; return; }
+    this.error = '';
+    this.message = '';
     this.loading=true;
     const v = this.form.value;
-    const payload: Client = { id: 0, address: v.address, user: { id: Number(v.userId) } };
+    const payload: Partial<Client> = { address: String(v.address || '').trim(), user: { id: Number(v.userId) } };
     this.s.create(payload).subscribe({
       next: (created)=>{
         this.photoService.set('client', created?.id, this.photoPreview || String(v.photoUrl || '').trim());
@@ -40,7 +43,13 @@ export class ClientCreateComponent {
         this.photoError = '';
         this.router.navigate(['/admin','clients']);
       },
-      error: ()=>{ this.error='Erreur creation client'; this.loading=false; }
+      error: (err: HttpErrorResponse)=>{
+        const backendMessage = typeof err.error === 'string'
+          ? err.error
+          : err.error?.message || err.message;
+        this.error = backendMessage || 'Erreur creation client';
+        this.loading=false;
+      }
     });
   }
 

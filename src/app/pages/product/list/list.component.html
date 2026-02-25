@@ -1,51 +1,92 @@
-<div class="list">
-  <div class="list-header">
-    <div class="d-flex justify-content-between align-items-center">
-      <h2>Produits</h2>
-      <div>
-        <a *ngIf="auth.isAdmin()" class="btn btn-primary" [routerLink]="['/admin','products','create']">Nouveau produit</a>
-      </div>
-    </div>
-    <div class="search-row mt-2">
-      <input class="form-control" placeholder="Rechercher" [(ngModel)]="query" />
-      <button class="btn btn-secondary" (click)="search()">Rechercher</button>
-    </div>
+<div class="list container">
+  <div class="list-top">
+    <h2>Produits</h2>
+    <a *ngIf="auth.isAdmin()" class="btn btn-primary" [routerLink]="['/admin','products','create']">Nouveau produit</a>
   </div>
+
+  <section class="filter-panel">
+    <div class="filter-grid">
+      <input class="form-control" placeholder="Rechercher un produit, fournisseur, categorie" [(ngModel)]="query" (keyup.enter)="search()" />
+
+      <select class="form-select" [(ngModel)]="selectedCategory" (change)="search()">
+        <option value="">Toutes les categories</option>
+        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+      </select>
+
+      <select class="form-select" [(ngModel)]="selectedProvider" (change)="applyFilters()">
+        <option value="">Tous les fournisseurs</option>
+        <option *ngFor="let p of providers" [value]="p">{{ p }}</option>
+      </select>
+
+      <select class="form-select" [(ngModel)]="sortBy" (change)="applyFilters()">
+        <option value="name">Tri: Nom A-Z</option>
+        <option value="priceAsc">Tri: Prix croissant</option>
+        <option value="priceDesc">Tri: Prix decroissant</option>
+      </select>
+    </div>
+
+    <div class="filter-actions">
+      <button class="btn btn-primary" type="button" (click)="search()">Rechercher</button>
+      <button class="btn btn-outline-secondary" type="button" (click)="clearFilters()">Reinitialiser</button>
+      <span class="result-count">{{ filtered.length }} resultat(s)</span>
+    </div>
+  </section>
 
   <div *ngIf="loading" class="loading">Chargement...</div>
   <div *ngIf="message" class="success">{{message}}</div>
   <div *ngIf="error" class="error">{{error}}</div>
 
-  <table class="product-table" *ngIf="!loading">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Photo</th>
-        <th>Nom</th>
-        <th>Prix</th>
-        <th>Quantite</th>
-        <th>Fournisseur</th>
-        <th>Sous-categorie</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of products">
-        <td class="id">{{p.id}}</td>
-        <td>
-          <img *ngIf="photo(p.id)" class="entity-photo-thumb" [src]="photo(p.id)!" alt="photo produit" />
-          <span *ngIf="!photo(p.id)">-</span>
-        </td>
-        <td>{{p.name}}</td>
-        <td class="price">{{p.price | number:'1.2-2'}} EUR</td>
-        <td class="stock">{{p.quantity}}</td>
-        <td>{{p.provider?.companyName || '-'}}</td>
-        <td>{{p.subCategory?.name || '-'}}</td>
-        <td class="actions">
-          <button *ngIf="auth.isAdmin()" class="btn" (click)="onEdit(p.id)">Modifier</button>
-          <button *ngIf="auth.isAdmin()" class="btn btn-danger" (click)="deleteOne(p.id)">Supprimer</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Photo</th>
+          <th>Nom</th>
+          <th>Prix</th>
+          <th>Quantite</th>
+          <th>Fournisseur</th>
+          <th>Categorie</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of filtered">
+          <td class="id">{{p.id}}</td>
+          <td>
+            <img *ngIf="photo(p.id)" class="entity-photo-thumb" [src]="photo(p.id)!" alt="photo produit" />
+            <span *ngIf="!photo(p.id)">-</span>
+          </td>
+          <td>{{p.name}}</td>
+          <td class="price">{{p.price | number:'1.2-2'}} EUR</td>
+          <td class="stock">{{p.quantity}}</td>
+          <td>{{p.provider?.companyName || '-'}}</td>
+          <td>{{categoryOf(p)}}</td>
+          <td class="actions">
+            <a class="btn btn-sm btn-outline-secondary" [routerLink]="detailsLink(p.id)">Details</a>
+            <button class="btn btn-sm btn-dark" (click)="addToCart(p)">Ajouter</button>
+            <button *ngIf="auth.isAdmin()" class="btn btn-sm" (click)="onEdit(p.id)">Modifier</button>
+            <button *ngIf="auth.isAdmin()" class="btn btn-sm btn-danger" (click)="deleteOne(p.id)">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mobile-grid" *ngIf="!loading">
+    <article class="product-mobile-card card card-wave rounded-4 border-0 shadow-sm" *ngFor="let p of filtered">
+      <img *ngIf="photo(p.id)" class="mobile-photo" [src]="photo(p.id)!" alt="photo produit" />
+      <div *ngIf="!photo(p.id)" class="mobile-photo mobile-placeholder">PHOTO</div>
+      <div class="mobile-body">
+        <h3>{{ p.name }}</h3>
+        <p>{{ categoryOf(p) }} - {{ p.provider?.companyName || '-' }}</p>
+        <strong>{{ p.price | number:'1.2-2' }} EUR</strong>
+      </div>
+      <div class="mobile-actions">
+        <a class="btn btn-sm btn-outline-secondary" [routerLink]="detailsLink(p.id)">Details</a>
+        <button class="btn btn-sm btn-dark" (click)="addToCart(p)">Ajouter</button>
+        <button *ngIf="auth.isAdmin()" class="btn btn-sm" (click)="onEdit(p.id)">Modifier</button>
+      </div>
+    </article>
+  </div>
 </div>

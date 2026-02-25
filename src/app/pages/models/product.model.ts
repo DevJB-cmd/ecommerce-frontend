@@ -9,5 +9,5 @@ export interface Product {
   imageUrl?: string;
   category?: number | null;
   provider?: { id: number; companyName?: string } | null;
-  subCategory?: { id: number; name?: string } | null;
+  subCategory?: { id: number; name?: string; category?: { id: number; name?: string } | null } | null;
 }
